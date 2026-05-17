@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Kezen Team — Painel do Aluno</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#0A0A0A;
+  --dark:#111217;
+  --card:#181A20;
+  --card2:#1E2028;
+  --border:#2A2D38;
+  --gold:#D4A017;
+  --gold-lt:#F0BF3A;
+  --gold-dk:#A07810;
+  --red:#C0392B;
+  --green:#1E8449;
+  --green-lt:#27AE60;
+  --blue:#1A5276;
+  --blue-lt:#2E86C1;
+  --white:#F5F5F5;
+  --muted:#8A8FA8;
+  --text:#DDE0EC;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--black);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+
+/* ── HEADER ── */
+.header{background:var(--dark);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:36px;height:36px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--black);letter-spacing:.02em}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.08em;color:var(--white);line-height:1}
+.logo-sub{font-size:9px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-top:-2px}
+.header-right{display:flex;align-items:center;gap:10px}
+.belt{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.belt.azul{background:var(--blue);color:#fff}
+.belt.branca{background:#444;color:#fff}
+.belt.roxa{background:#5B2C6F;color:#fff}
+.belt.marrom{background:#5D4037;color:#fff}
+.belt.preta{background:#111;color:var(--gold);border:1px solid var(--gold)}
+.notif{width:32px;height:32px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;cursor:pointer}
+.notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:var(--gold);border-radius:50%;border:1px solid var(--dark)}
+
+/* ── NAV ── */
+.nav{display:flex;background:var(--dark);border-top:1px solid var(--border);position:fixed;bottom:0;left:0;right:0;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;font-size:10px;color:var(--muted);cursor:pointer;transition:color .15s;gap:3px;border:none;background:none}
+.nav-btn .nav-icon{font-size:20px;line-height:1}
+.nav-btn.active{color:var(--gold)}
+.nav-btn.active .nav-icon{filter:drop-shadow(0 0 4px var(--gold-dk))}
+
+/* ── PAGES ── */
+.page{display:none;padding:16px 16px 90px;animation:fadeIn .2s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── HERO BANNER ── */
+.hero{background:linear-gradient(135deg,var(--gold-dk) 0%,var(--gold) 60%,var(--gold-lt) 100%);border-radius:14px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.hero::before{content:'BJJ';position:absolute;right:-10px;top:-10px;font-family:'Bebas Neue',sans-serif;font-size:100px;color:rgba(0,0,0,.12);line-height:1}
+.hero-label{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,0,0,.6);margin-bottom:4px}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--black);line-height:1.1;margin-bottom:6px}
+.hero-sub{font-size:12px;color:rgba(0,0,0,.65);font-weight:500}
+.hero-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,.15);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--black);margin-top:10px}
+
+/* ── SECTION HEADER ── */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:20px}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.06em;color:var(--white)}
+.sec-link{font-size:11px;color:var(--gold);font-weight:600;cursor:pointer;text-decoration:none}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+.card2{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.card-sm{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+
+/* ── TÉCNICA DO DIA ── */
+.tecnica-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:10px}
+.tecnica-thumb{height:140px;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);display:flex;align-items:center;justify-content:center;font-size:52px;position:relative}
+.tecnica-badge{position:absolute;top:10px;left:10px;background:var(--gold);color:var(--black);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+.tecnica-body{padding:14px}
+.tecnica-title{font-size:16px;font-weight:700;color:var(--white);margin-bottom:4px}
+.tecnica-meta{font-size:12px;color:var(--muted);display:flex;gap:12px}
+.tecnica-meta span{display:flex;align-items:center;gap:4px}
+
+/* ── CRONOGRAMA ── */
+.schedule-day{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.sched-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer}
+.sched-day-name{font-weight:700;font-size:14px;color:var(--white)}
+.sched-day-tag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600}
+.tag-open{background:rgba(30,132,73,.2);color:var(--green-lt)}
+.tag-kids{background:rgba(26,82,118,.2);color:var(--blue-lt)}
+.tag-today{background:var(--gold);color:var(--black)}
+.sched-body{padding:0 14px 12px;display:none}
+.sched-body.open{display:block}
+.sched-aula{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)}
+.sched-aula:last-child{border-bottom:none}
+.sched-time{font-size:12px;font-weight:700;color:var(--gold);min-width:52px}
+.sched-info .sched-nome{font-size:13px;font-weight:600;color:var(--white)}
+.sched-info .sched-prof{font-size:11px;color:var(--muted)}
+.sched-nivel{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;margin-left:auto;white-space:nowrap}
+.nivel-kids{background:rgba(26,82,118,.2);color:var(--blue-lt)}
+.nivel-int{background:rgba(160,120,16,.2);color:var(--gold-lt)}
+.nivel-av{background:rgba(192,57,43,.2);color:#E74C3C}
+.nivel-all{background:rgba(30,132,73,.2);color:var(--green-lt)}
+
+/* ── PRESENÇA ── */
+.presenca-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.presenca-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.pstat{background:var(--card2);border-radius:10px;padding:12px 8px;text-align:center}
+.pstat-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);line-height:1}
+.pstat-label{font-size:10px;color:var(--muted);margin-top:2px}
+.presenca-bar{background:var(--border);border-radius:20px;height:8px;margin-bottom:4px;overflow:hidden}
+.presenca-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--gold-dk),var(--gold-lt))}
+.presenca-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:12px}
+.treino-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.treino-item:last-child{border-bottom:none}
+.treino-date{font-size:12px;font-weight:700;color:var(--muted);min-width:36px;text-align:center;line-height:1.2}
+.treino-date span{display:block;font-size:10px;font-weight:400;color:var(--border)}
+.treino-info{flex:1}
+.treino-nome{font-size:13px;font-weight:600;color:var(--white)}
+.treino-detalhe{font-size:11px;color:var(--muted)}
+.treino-status{font-size:18px}
+.check-btn{background:var(--gold);color:var(--black);border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.04em;display:flex;align-items:center;gap:6px;transition:all .15s}
+.check-btn:active{transform:scale(.97)}
+.check-btn.checked{background:var(--green-lt);color:#fff}
+
+/* ── CAMPEONATO ── */
+.camp-card{background:linear-gradient(135deg,var(--card),#1A1625);border:1px solid #3D2B6B;border-radius:14px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden}
+.camp-card::before{content:'🏆';position:absolute;right:12px;top:10px;font-size:36px;opacity:.15}
+.camp-nome{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--white);margin-bottom:4px}
+.camp-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.camp-tag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;background:rgba(91,44,111,.3);color:#C39BD3}
+.camp-checklist{list-style:none}
+.camp-checklist li{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding:4px 0}
+.camp-checklist li.done{color:var(--green-lt)}
+.camp-checklist li.done::before{content:'✓';color:var(--green-lt);font-weight:700}
+.camp-checklist li:not(.done)::before{content:'○';color:var(--border)}
+.camp-progress{margin-top:10px}
+.camp-progress-bar{background:var(--border);border-radius:20px;height:6px;overflow:hidden;margin-top:6px}
+.camp-progress-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#5B2C6F,#C39BD3)}
+
+/* ── AVISOS ── */
+.aviso{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;gap:12px}
+.aviso-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.aviso-icon.urgent{background:rgba(192,57,43,.2)}
+.aviso-icon.info{background:rgba(26,82,118,.2)}
+.aviso-icon.event{background:rgba(212,160,23,.15)}
+.aviso-icon.gold{background:rgba(212,160,23,.15)}
+.aviso-body .aviso-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px}
+.aviso-body .aviso-txt{font-size:12px;color:var(--muted);line-height:1.5}
+.aviso-body .aviso-time{font-size:10px;color:var(--border);margin-top:4px}
+
+/* ── METAS ── */
+.meta-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px}
+.meta-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.meta-nome{font-size:14px;font-weight:700;color:var(--white)}
+.meta-pct{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--gold);line-height:1}
+.meta-bar{background:var(--border);border-radius:20px;height:8px;overflow:hidden;margin-bottom:6px}
+.meta-fill{height:100%;border-radius:20px}
+.meta-fill.gold{background:linear-gradient(90deg,var(--gold-dk),var(--gold-lt))}
+.meta-fill.green{background:linear-gradient(90deg,var(--green),var(--green-lt))}
+.meta-fill.blue{background:linear-gradient(90deg,var(--blue),var(--blue-lt))}
+.meta-fill.red{background:linear-gradient(90deg,#922B21,#E74C3C)}
+.meta-desc{font-size:11px;color:var(--muted)}
+.desafio{background:linear-gradient(135deg,#0D1117,#1A1A2E);border:1px solid #2C3E50;border-radius:14px;padding:16px;margin-bottom:8px;text-align:center}
+.desafio-icon{font-size:40px;margin-bottom:8px}
+.desafio-nome{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--white);margin-bottom:4px}
+.desafio-desc{font-size:12px;color:var(--muted);margin-bottom:12px}
+.desafio-progress{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold)}
+.desafio-meta{font-size:11px;color:var(--muted)}
+.ranking{margin-top:12px}
+.rank-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.rank-item:last-child{border-bottom:none}
+.rank-pos{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--muted);width:24px;text-align:center}
+.rank-pos.gold{color:var(--gold)}
+.rank-pos.silver{color:#AAB7B8}
+.rank-pos.bronze{color:#CA6F1E}
+.rank-avatar{width:30px;height:30px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold);border:1px solid var(--border)}
+.rank-name{flex:1;font-size:13px;font-weight:600;color:var(--white)}
+.rank-pts{font-size:12px;color:var(--gold);font-weight:700}
+
+/* ── RIFAS ── */
+.rifa-card{background:linear-gradient(135deg,var(--card),#1A2210);border:1px solid #2D4A1A;border-radius:14px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden}
+.rifa-card::before{content:'🎟';position:absolute;right:-5px;top:-5px;font-size:60px;opacity:.1}
+.rifa-nome{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--white);margin-bottom:4px}
+.rifa-premio{font-size:13px;color:var(--green-lt);font-weight:600;margin-bottom:8px}
+.rifa-meta{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.rifa-tag{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(30,132,73,.2);color:var(--green-lt);font-weight:600}
+.rifa-progress-bar{background:var(--border);border-radius:20px;height:10px;overflow:hidden;margin-bottom:6px}
+.rifa-progress-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--green),var(--green-lt))}
+.rifa-nums{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:12px}
+.rifa-btn{background:var(--green-lt);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;width:100%;transition:all .15s}
+.rifa-btn:active{transform:scale(.98);background:var(--green)}
+
+/* ── EVENTOS ── */
+.evento-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;display:flex}
+.evento-date-col{background:var(--gold);padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:54px}
+.evento-date-col .ev-dia{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--black);line-height:1}
+.evento-date-col .ev-mes{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.6)}
+.evento-body{padding:12px;flex:1}
+.evento-nome{font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px}
+.evento-info{font-size:12px;color:var(--muted)}
+.evento-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.evento-confirmados{font-size:11px;color:var(--green-lt);font-weight:600}
+.evento-confirmar{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.evento-confirmar.confirmado{background:var(--gold);color:var(--black)}
+.evento-confirmar:active{transform:scale(.97)}
+
+/* ── PROFILE CARD ── */
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;margin-bottom:12px}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dk),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--black);margin:0 auto 10px;border:3px solid var(--gold-dk)}
+.profile-name{font-size:18px;font-weight:700;color:var(--white);margin-bottom:2px}
+.profile-meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+.profile-badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.pbadge{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.pbadge.faixa{background:var(--blue);color:#fff}
+.pbadge.turma{background:rgba(212,160,23,.15);color:var(--gold)}
+.pbadge.tempo{background:var(--card2);color:var(--muted);border:1px solid var(--border)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green-lt);color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-mark">KZ</div>
+    <div>
+      <div class="logo-text">KEZEN TEAM</div>
+      <div class="logo-sub">Painel do Aluno · Olinda</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="belt azul">Faixa Azul</span>
+    <div class="notif" onclick="showToast('Nenhuma notificação nova')">🔔<div class="notif-dot"></div></div>
+  </div>
+</header>
+
+<!-- ══ PAGE: HOME ══ -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <div class="hero-label">Boa tarde, atleta 👊</div>
+    <div class="hero-title">TREINAR É<br>EVOLUIR</div>
+    <div class="hero-sub">Semana 22 · Junho 2025</div>
+    <div class="hero-badge">🏆 Campeonato em 18 dias</div>
+  </div>
+
+  <!-- Técnica do Dia -->
+  <div class="sec-header">
+    <div class="sec-title">TÉCNICA DO DIA</div>
+    <span class="sec-link" onclick="navTo('tecnica')">ver mais →</span>
+  </div>
+  <div class="tecnica-card" onclick="navTo('tecnica')">
+    <div class="tecnica-thumb">
+      🥋
+      <div class="tecnica-badge">Gi · Intermediário</div>
+    </div>
+    <div class="tecnica-body">
+      <div class="tecnica-title">Triângulo da Guarda Fechada</div>
+      <div class="tecnica-meta">
+        <span>🎥 4 min</span>
+        <span>👨‍🏫 Prof. Tiko</span>
+        <span>⭐ Fundamentos</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aula de Hoje -->
+  <div class="sec-header">
+    <div class="sec-title">AULAS DE HOJE</div>
+    <span class="sec-link" onclick="navTo('cronograma')">cronograma →</span>
+  </div>
+  <div class="card">
+    <div class="sched-aula" style="border:none;padding:0 0 10px">
+      <div class="sched-time">07:00</div>
+      <div class="sched-info">
+        <div class="sched-nome">Gi — Intermediário/Avançado</div>
+        <div class="sched-prof">Prof. Tiko Souza</div>
+      </div>
+      <div class="sched-nivel nivel-int">Inter</div>
+    </div>
+    <div class="sched-aula" style="padding-top:10px;border-bottom:none">
+      <div class="sched-time">18:00</div>
+      <div class="sched-info">
+        <div class="sched-nome">Kids — Jiu Jitsu</div>
+        <div class="sched-prof">Prof. Tiko Souza</div>
+      </div>
+      <div class="sched-nivel nivel-kids">Kids</div>
+    </div>
+    <button class="check-btn" id="check-home" onclick="confirmarPresenca(this)" style="width:100%;justify-content:center;margin-top:12px">
+      ✋ Confirmar Presença no Treino
+    </button>
+  </div>
+
+  <!-- Stats Rápidos -->
+  <div class="sec-header" style="margin-top:16px">
+    <div class="sec-title">SEU MÊS</div>
+  </div>
+  <div class="card-row">
+    <div class="card-sm">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Treinos</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--gold);line-height:1">14</div>
+      <div style="font-size:11px;color:var(--muted)">de 20 na meta</div>
+      <div class="presenca-bar" style="margin-top:8px"><div class="presenca-fill" style="width:70%"></div></div>
+    </div>
+    <div class="card-sm">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Posição</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--gold);line-height:1">#3</div>
+      <div style="font-size:11px;color:var(--muted)">ranking do mês</div>
+      <div style="font-size:10px;color:var(--green-lt);margin-top:8px">▲ subiu 2 posições</div>
+    </div>
+  </div>
+
+  <!-- Aviso Urgente -->
+  <div class="sec-header">
+    <div class="sec-title">AVISOS</div>
+    <span class="sec-link" onclick="navTo('avisos')">todos →</span>
+  </div>
+  <div class="aviso" onclick="navTo('avisos')">
+    <div class="aviso-icon urgent">📢</div>
+    <div class="aviso-body">
+      <div class="aviso-title">Pesagem amanhã — Campeonato CBJJ</div>
+      <div class="aviso-txt">Pesagem às 08h no ginásio. Trazer kimono, protetor bucal e atestado médico.</div>
+      <div class="aviso-time">Há 2 horas · Urgente</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PAGE: TÉCNICA ══ -->
+<div class="page" id="page-tecnica">
+
+  <div class="hero" style="background:linear-gradient(135deg,#0D1117,#1A1A2E,#16213E)">
+    <div class="hero-label" style="color:rgba(212,160,23,.7)">Conteúdo Técnico</div>
+    <div class="hero-title" style="color:var(--white)">ESCOLA<br>KEZEN</div>
+    <div class="hero-sub" style="color:var(--muted)">Técnicas e fundamentos da equipe</div>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title">TÉCNICA DO DIA</div>
+  </div>
+  <div class="tecnica-card">
+    <div class="tecnica-thumb" style="height:180px;font-size:70px">🥋</div>
+    <div class="tecnica-body">
+      <div class="tecnica-badge" style="position:relative;display:inline-block;margin-bottom:8px">Gi · Intermediário</div>
+      <div class="tecnica-title" style="font-size:18px;margin-bottom:6px">Triângulo da Guarda Fechada</div>
+      <div class="tecnica-meta" style="margin-bottom:12px">
+        <span>🎥 4 min</span>
+        <span>👨‍🏫 Prof. Tiko</span>
+        <span>⭐ Fundamentos</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px">
+        Aprenda a aplicar o triângulo de dentro da guarda fechada, controlando os braços do oponente e finalizando com o corte no pescoço. Ideal para atletas de intermediário.
+      </div>
+      <button class="check-btn" onclick="showToast('Vídeo disponível no grupo da equipe 📱')" style="width:100%;justify-content:center">
+        ▶ Assistir Vídeo Completo
+      </button>
+    </div>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title">TÉCNICAS DA SEMANA</div>
+  </div>
+
+  <div class="tecnica-card" onclick="showToast('Abrindo técnica...')">
+    <div class="tecnica-body" style="display:flex;align-items:center;gap:12px;padding:12px 14px">
+      <div style="width:48px;height:48px;background:#1A1A2E;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🤸</div>
+      <div>
+        <div class="tecnica-title" style="font-size:14px">Raspagem de Tesoura</div>
+        <div class="tecnica-meta"><span>🎥 3 min</span><span>No-Gi</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="tecnica-card" onclick="showToast('Abrindo técnica...')">
+    <div class="tecnica-body" style="display:flex;align-items:center;gap:12px;padding:12px 14px">
+      <div style="width:48px;height:48px;background:#1A1A2E;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">💪</div>
+      <div>
+        <div class="tecnica-title" style="font-size:14px">Chave de Braço do Monte</div>
+        <div class="tecnica-meta"><span>🎥 5 min</span><span>Gi · Avançado</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="tecnica-card" onclick="showToast('Abrindo técnica...')">
+    <div class="tecnica-body" style="display:flex;align-items:center;gap:12px;padding:12px 14px">
+      <div style="width:48px;height:48px;background:#1A1A2E;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">👶</div>
+      <div>
+        <div class="tecnica-title" style="font-size:14px">Queda — O Giro Kids</div>
+        <div class="tecnica-meta"><span>🎥 2 min</span><span>Kids · Iniciante</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PAGE: CRONOGRAMA ══ -->
+<div class="page" id="page-cronograma">
+
+  <div class="sec-header" style="margin-top:4px">
+    <div class="sec-title">CRONOGRAMA SEMANAL</div>
+  </div>
+
+  <div id="schedule-list"></div>
+
+</div>
+
+<!-- ══ PAGE: PRESENÇA ══ -->
+<div class="page" id="page-presenca">
+
+  <div class="profile-card">
+    <div class="profile-avatar">AL</div>
+    <div class="profile-name">Atleta Kezen</div>
+    <div class="profile-meta">Membro desde Jan 2024 · Rio Doce, Olinda</div>
+    <div class="profile-badges">
+      <span class="pbadge faixa">Faixa Azul</span>
+      <span class="pbadge turma">Turma Intermediário</span>
+      <span class="pbadge tempo">1 ano e 4 meses</span>
+    </div>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title">PRESENÇA NO MÊS</div>
+  </div>
+  <div class="presenca-stats">
+    <div class="pstat"><div class="pstat-num">14</div><div class="pstat-label">Treinos</div></div>
+    <div class="pstat"><div class="pstat-num">70%</div><div class="pstat-label">Assiduidade</div></div>
+    <div class="pstat"><div class="pstat-num">#3</div><div class="pstat-label">Ranking</div></div>
+  </div>
+  <div class="presenca-bar"><div class="presenca-fill" style="width:70%"></div></div>
+  <div class="presenca-label"><span>0 treinos</span><span>Meta: 20 treinos</span></div>
+
+  <!-- Confirmar hoje -->
+  <button class="check-btn" id="check-presenca" onclick="confirmarPresenca(this)" style="width:100%;justify-content:center;margin-bottom:16px;padding:12px">
+    ✋ Confirmar Presença — Hoje (Terça)
+  </button>
+
+  <div class="sec-header">
+    <div class="sec-title">HISTÓRICO</div>
+  </div>
+  <div class="card">
+    <div class="treino-item">
+      <div class="treino-date">09<span>Jun</span></div>
+      <div class="treino-info">
+        <div class="treino-nome">Gi — Intermediário</div>
+        <div class="treino-detalhe">18h00 · Prof. Tiko</div>
+      </div>
+      <div class="treino-status">✅</div>
+    </div>
+    <div class="treino-item">
+      <div class="treino-date">07<span>Jun</span></div>
+      <div class="treino-info">
+        <div class="treino-nome">No-Gi</div>
+        <div class="treino-detalhe">07h00 · Prof. Tiko</div>
+      </div>
+      <div class="treino-status">✅</div>
+    </div>
+    <div class="treino-item">
+      <div class="treino-date">06<span>Jun</span></div>
+      <div class="treino-info">
+        <div class="treino-nome">Gi — Intermediário</div>
+        <div class="treino-detalhe">18h00 · Prof. Tiko</div>
+      </div>
+      <div class="treino-status">✅</div>
+    </div>
+    <div class="treino-item">
+      <div class="treino-date">05<span>Jun</span></div>
+      <div class="treino-info">
+        <div class="treino-nome">Gi — Avançado</div>
+        <div class="treino-detalhe">18h00 · Prof. Tiko</div>
+      </div>
+      <div class="treino-status">❌</div>
+    </div>
+    <div class="treino-item" style="border-bottom:none">
+      <div class="treino-date">04<span>Jun</span></div>
+      <div class="treino-info">
+        <div class="treino-nome">Gi — Intermediário</div>
+        <div class="treino-detalhe">07h00 · Prof. Tiko</div>
+      </div>
+      <div class="treino-status">✅</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PAGE: AVISOS ══ -->
+<div class="page" id="page-avisos">
+
+  <div class="sec-header" style="margin-top:4px">
+    <div class="sec-title">CAMPEONATOS</div>
+  </div>
+  <div class="camp-card">
+    <div class="camp-nome">CAMPEONATO CBJJ PERNAMBUCO</div>
+    <div class="camp-meta">
+      <span class="camp-tag">📅 28 Jun 2025</span>
+      <span class="camp-tag">📍 Recife</span>
+      <span class="camp-tag">🥋 Gi + No-Gi</span>
+    </div>
+    <ul class="camp-checklist">
+      <li class="done">Inscrição confirmada</li>
+      <li class="done">Kimono aprovado</li>
+      <li class="done">Atestado médico</li>
+      <li>Pesagem amanhã 08h</li>
+      <li>Aquecimento coletivo 07h30</li>
+    </ul>
+    <div class="camp-progress">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px"><span>Preparação</span><span>60%</span></div>
+      <div class="camp-progress-bar"><div class="camp-progress-fill" style="width:60%"></div></div>
+    </div>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title">METAS E DESAFIOS</div>
+  </div>
+
+  <div class="meta-item">
+    <div class="meta-header">
+      <div class="meta-nome">🥋 Treinos no Mês</div>
+      <div class="meta-pct">70%</div>
+    </div>
+    <div class="meta-bar"><div class="meta-fill gold" style="width:70%"></div></div>
+    <div class="meta-desc">14 de 20 treinos concluídos</div>
+  </div>
+  <div class="meta-item">
+    <div class="meta-header">
+      <div class="meta-nome">⚡ Técnicas Estudadas</div>
+      <div class="meta-pct">50%</div>
+    </div>
+    <div class="meta-bar"><div class="meta-fill blue" style="width:50%"></div></div>
+    <div class="meta-desc">5 de 10 técnicas do mês</div>
+  </div>
+  <div class="meta-item">
+    <div class="meta-header">
+      <div class="meta-nome">🏆 Pódios 2025</div>
+      <div class="meta-pct">67%</div>
+    </div>
+    <div class="meta-bar"><div class="meta-fill green" style="width:67%"></div></div>
+    <div class="meta-desc">2 de 3 campeonatos com medalha</div>
+  </div>
+
+  <div class="desafio">
+    <div class="desafio-icon">🔥</div>
+    <div class="desafio-nome">DESAFIO DO MÊS</div>
+    <div class="desafio-desc">Finalize 10 treinos consecutivos sem falta</div>
+    <div class="desafio-progress">7</div>
+    <div class="desafio-meta">de 10 treinos</div>
+    <div class="meta-bar" style="margin-top:10px"><div class="meta-fill gold" style="width:70%"></div></div>
+    <div class="ranking" style="margin-top:16px">
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Ranking da Equipe</div>
+      <div class="rank-item">
+        <div class="rank-pos gold">1</div>
+        <div class="rank-avatar">MR</div>
+        <div class="rank-name">Marcos Rodrigues</div>
+        <div class="rank-pts">10 ✓</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-pos silver">2</div>
+        <div class="rank-avatar">FC</div>
+        <div class="rank-name">Felipe Costa</div>
+        <div class="rank-pts">9 ✓</div>
+      </div>
+      <div class="rank-item" style="border-color:var(--gold)">
+        <div class="rank-pos bronze">3</div>
+        <div class="rank-avatar" style="border-color:var(--gold);color:var(--gold)">AL</div>
+        <div class="rank-name" style="color:var(--gold)">Você</div>
+        <div class="rank-pts">7 ✓</div>
+      </div>
+      <div class="rank-item">
+        <div class="rank-pos">4</div>
+        <div class="rank-avatar">JS</div>
+        <div class="rank-name">João Silva</div>
+        <div class="rank-pts">6 ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title">RIFAS & EVENTOS</div>
+  </div>
+
+  <div class="rifa-card">
+    <div class="rifa-nome">RIFA — VIAGEM AO NORDESTE OPEN</div>
+    <div class="rifa-premio">🎁 Prêmio: Kit completo de No-Gi</div>
+    <div class="rifa-meta">
+      <span class="rifa-tag">📅 Sorteio: 30 Jun</span>
+      <span class="rifa-tag">💵 R$10 / número</span>
+    </div>
+    <div class="rifa-progress-bar"><div class="rifa-progress-fill" style="width:65%"></div></div>
+    <div class="rifa-nums"><span>65 números vendidos</span><span>Meta: 100</span></div>
+    <button class="rifa-btn" onclick="showToast('Entre em contato com a equipe para adquirir! 📲')">🎟 Comprar Número</button>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title">EVENTOS DA EQUIPE</div>
+  </div>
+
+  <div class="evento-card">
+    <div class="evento-date-col"><div class="ev-dia">28</div><div class="ev-mes">Jun</div></div>
+    <div class="evento-body">
+      <div class="evento-nome">Campeonato CBJJ Pernambuco</div>
+      <div class="evento-info">📍 Recife · Saída coletiva 06h30</div>
+      <div class="evento-footer">
+        <div class="evento-confirmados">✓ 23 atletas confirmados</div>
+        <button class="evento-confirmar confirmado" onclick="toggleConfirmar(this)">Confirmado</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="evento-card">
+    <div class="evento-date-col" style="background:#2C3E50"><div class="ev-dia" style="color:#AAB7B8">15</div><div class="ev-mes" style="color:#717D7E">Jul</div></div>
+    <div class="evento-body">
+      <div class="evento-nome">Churrasão da Equipe 🍖</div>
+      <div class="evento-info">📍 Academia Kezen · Evento social</div>
+      <div class="evento-footer">
+        <div class="evento-confirmados" style="color:var(--muted)">12 confirmados</div>
+        <button class="evento-confirmar" onclick="toggleConfirmar(this)">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="evento-card">
+    <div class="evento-date-col" style="background:#2C3E50"><div class="ev-dia" style="color:#AAB7B8">20</div><div class="ev-mes" style="color:#717D7E">Jul</div></div>
+    <div class="evento-body">
+      <div class="evento-nome">Torneio Interno Kezen</div>
+      <div class="evento-info">📍 Academia · Todas as categorias</div>
+      <div class="evento-footer">
+        <div class="evento-confirmados" style="color:var(--muted)">Inscrições abertas</div>
+        <button class="evento-confirmar" onclick="toggleConfirmar(this)">Inscrever</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title">AVISOS IMPORTANTES</div>
+  </div>
+
+  <div class="aviso">
+    <div class="aviso-icon urgent">🚨</div>
+    <div class="aviso-body">
+      <div class="aviso-title">Pesagem amanhã — CBJJ</div>
+      <div class="aviso-txt">Pesagem às 08h no ginásio. Trazer kimono, protetor bucal e atestado médico. Não se atrase!</div>
+      <div class="aviso-time">Há 2 horas · Urgente</div>
+    </div>
+  </div>
+  <div class="aviso">
+    <div class="aviso-icon info">📋</div>
+    <div class="aviso-body">
+      <div class="aviso-title">Mensalidade de Julho</div>
+      <div class="aviso-txt">Vence dia 05. Pix disponível: contato via WhatsApp da academia.</div>
+      <div class="aviso-time">Há 1 dia</div>
+    </div>
+  </div>
+  <div class="aviso">
+    <div class="aviso-icon event">🏋️</div>
+    <div class="aviso-body">
+      <div class="aviso-title">Aula Extra — Sábado 08h</div>
+      <div class="aviso-txt">Treino especial de No-Gi com foco em preparação para o campeonato. Presença recomendada.</div>
+      <div class="aviso-time">Há 3 dias</div>
+    </div>
+  </div>
+  <div class="aviso">
+    <div class="aviso-icon gold">🥇</div>
+    <div class="aviso-body">
+      <div class="aviso-title">Parabéns aos campeões!</div>
+      <div class="aviso-txt">Marcos, Felipe e Ana conquistaram o pódio no último torneio. Orgulho da equipe! 🏆</div>
+      <div class="aviso-time">Há 5 dias</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" id="nav-home" onclick="navTo('home')">
+    <span class="nav-icon">🏠</span>
+    Início
+  </button>
+  <button class="nav-btn" id="nav-tecnica" onclick="navTo('tecnica')">
+    <span class="nav-icon">🥋</span>
+    Técnica
+  </button>
+  <button class="nav-btn" id="nav-cronograma" onclick="navTo('cronograma')">
+    <span class="nav-icon">📅</span>
+    Aulas
+  </button>
+  <button class="nav-btn" id="nav-presenca" onclick="navTo('presenca')">
+    <span class="nav-icon">✅</span>
+    Presença
+  </button>
+  <button class="nav-btn" id="nav-avisos" onclick="navTo('avisos')">
+    <span class="nav-icon">📢</span>
+    Equipe
+  </button>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── NAVIGATION ──────────────────────────────────────────
+function navTo(page){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('page-'+page).classList.add('active');
+  var nb = document.getElementById('nav-'+page);
+  if(nb) nb.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── CRONOGRAMA ───────────────────────────────────────────
+var schedule = [
+  {dia:'Segunda',tag:'Treino Normal',tagClass:'tag-open',hoje:false,aulas:[
+    {hora:'07:00',nome:'Gi — Avançado',prof:'Prof. Tiko',nivel:'nivel-av',nivelTxt:'Avançado'},
+    {hora:'18:00',nome:'Gi — Intermediário',prof:'Prof. Tiko',nivel:'nivel-int',nivelTxt:'Inter'},
+  ]},
+  {dia:'Terça',tag:'HOJE',tagClass:'tag-today',hoje:true,aulas:[
+    {hora:'07:00',nome:'Gi — Intermediário/Avançado',prof:'Prof. Tiko',nivel:'nivel-int',nivelTxt:'Inter'},
+    {hora:'18:00',nome:'Kids — Jiu Jitsu',prof:'Prof. Tiko',nivel:'nivel-kids',nivelTxt:'Kids'},
+  ]},
+  {dia:'Quarta',tag:'Treino Normal',tagClass:'tag-open',hoje:false,aulas:[
+    {hora:'07:00',nome:'No-Gi',prof:'Prof. Tiko',nivel:'nivel-all',nivelTxt:'Todos'},
+    {hora:'18:00',nome:'Gi — Intermediário',prof:'Prof. Tiko',nivel:'nivel-int',nivelTxt:'Inter'},
+    {hora:'19:30',nome:'Kids — Jiu Jitsu',prof:'Prof. Tiko',nivel:'nivel-kids',nivelTxt:'Kids'},
+  ]},
+  {dia:'Quinta',tag:'Treino Normal',tagClass:'tag-open',hoje:false,aulas:[
+    {hora:'07:00',nome:'Gi — Avançado',prof:'Prof. Tiko',nivel:'nivel-av',nivelTxt:'Avançado'},
+    {hora:'18:00',nome:'Gi — Todos os níveis',prof:'Prof. Tiko',nivel:'nivel-all',nivelTxt:'Todos'},
+  ]},
+  {dia:'Sexta',tag:'Treino Normal',tagClass:'tag-open',hoje:false,aulas:[
+    {hora:'07:00',nome:'No-Gi',prof:'Prof. Tiko',nivel:'nivel-all',nivelTxt:'Todos'},
+    {hora:'18:00',nome:'Gi — Intermediário',prof:'Prof. Tiko',nivel:'nivel-int',nivelTxt:'Inter'},
+    {hora:'19:30',nome:'Kids — Jiu Jitsu',prof:'Prof. Tiko',nivel:'nivel-kids',nivelTxt:'Kids'},
+  ]},
+  {dia:'Sábado',tag:'Aula Extra',tagClass:'tag-kids',hoje:false,aulas:[
+    {hora:'08:00',nome:'No-Gi Especial',prof:'Prof. Tiko',nivel:'nivel-all',nivelTxt:'Todos'},
+  ]},
+];
+
+(function buildSchedule(){
+  var list = document.getElementById('schedule-list');
+  schedule.forEach(function(day,i){
+    var div = document.createElement('div');
+    div.className = 'schedule-day';
+    var aulasHTML = day.aulas.map(function(a){
+      return '<div class="sched-aula"><div class="sched-time">'+a.hora+'</div><div class="sched-info"><div class="sched-nome">'+a.nome+'</div><div class="sched-prof">'+a.prof+'</div></div><div class="sched-nivel '+a.nivel+'">'+a.nivelTxt+'</div></div>';
+    }).join('');
+    div.innerHTML = '<div class="sched-header" onclick="toggleDay(this)"><div class="sched-day-name">'+day.dia+'</div><div class="sched-day-tag '+day.tagClass+'">'+day.tag+'</div></div><div class="sched-body'+(day.hoje?' open':'')+'">'+aulasHTML+'</div>';
+    list.appendChild(div);
+  });
+})();
+
+function toggleDay(el){
+  var body = el.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ── PRESENCE ─────────────────────────────────────────────
+var presencaFeita = false;
+function confirmarPresenca(btn){
+  if(!presencaFeita){
+    presencaFeita = true;
+    btn.classList.add('checked');
+    btn.textContent = '✅ Presença Confirmada!';
+    // Sync both buttons
+    document.querySelectorAll('[id^=check]').forEach(function(b){
+      b.classList.add('checked');
+      b.textContent = '✅ Presença Confirmada!';
+    });
+    showToast('Presença confirmada! Continue assim 💪');
+  }
+}
+
+// ── EVENTOS ──────────────────────────────────────────────
+function toggleConfirmar(btn){
+  btn.classList.toggle('confirmado');
+  btn.textContent = btn.classList.contains('confirmado') ? 'Confirmado' : 'Confirmar';
+  showToast(btn.classList.contains('confirmado') ? 'Presença confirmada! 🙌' : 'Confirmação removida');
+}
+
+// ── TOAST ────────────────────────────────────────────────
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2600);
+}
+</script>
+</body>
+</html>
